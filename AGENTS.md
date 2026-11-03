@@ -23,3 +23,11 @@ Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `
 ### Domain docs
 
 Single-context: root `GLOSSARY.md` + `docs/adr/`. See `docs/agents/domain.md`.
+
+## State management
+
+- Server data (levireg-core): TanStack Query only. Never copy it into a Zustand store.
+- Shareable state (filters, pagination, active tab): router search params.
+- Client-only state shared across components: Zustand, one small store per concern in `src/stores/<name>.ts` (e.g. `useUiStore`). Read it with selectors: `useUiStore((s) => s.sidebarOpen)`.
+- State local to one component: `useState`.
+- Add Zustand middleware (`persist`, `devtools`) per store, only when that store needs it.
