@@ -16,7 +16,7 @@ import { meQuery } from '#/lib/auth'
 export const Route = createFileRoute('/_authed')({
   beforeLoad: async ({ context, location }) => {
     try {
-      await context.queryClient.ensureQueryData(meQuery)
+      await context.queryClient.query({ ...meQuery, staleTime: 'static' })
     } catch (e) {
       if (apiCode(e) === 'unauthorized') {
         throw redirect({ to: '/login', search: { redirect: location.href } })

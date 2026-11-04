@@ -74,8 +74,12 @@ export async function api<
   return res.data.data as Data<Op<TPath, TMethod>>
 }
 
-export function apiCode(error: unknown): Code | undefined {
+export function apiEnvelope(error: unknown): Envelope | undefined {
   return axios.isAxiosError<Envelope | undefined>(error)
-    ? error.response?.data?.code
+    ? error.response?.data
     : undefined
+}
+
+export function apiCode(error: unknown): Code | undefined {
+  return apiEnvelope(error)?.code
 }
