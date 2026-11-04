@@ -8,7 +8,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
-  server: { proxy: { '/api': 'http://localhost:8021' } },
+  // Object form, not the string shorthand: the shorthand sets changeOrigin,
+  // rewriting Host to :8021 so levireg-core's Origin check sees a foreign origin.
+  server: { proxy: { '/api': { target: 'http://localhost:8021' } } },
   plugins: [
     devtools(),
     tailwindcss(),
