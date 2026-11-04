@@ -284,7 +284,7 @@ function VariantB({ form, status }: SignIn) {
       <aside className="hidden flex-col justify-between bg-primary p-10 text-primary-foreground md:flex">
         <span className="font-semibold tracking-tight">levireg / console</span>
         <p className="text-2xl leading-snug font-medium">
-          Admin for levireg services.
+          Dashboard for levireg services.
         </p>
         <span className="text-sm opacity-70">levireg.dev</span>
       </aside>
