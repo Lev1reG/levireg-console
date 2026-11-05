@@ -10,6 +10,7 @@ import axios from 'axios'
 import { routeTree } from './routeTree.gen'
 import { Spinner } from './components/ui/spinner'
 import { ErrorFallback } from './components/ui/error-fallback'
+import { NotFound } from './components/not-found'
 import { apiCode } from './lib/api'
 
 export function getRouter() {
@@ -54,6 +55,7 @@ export function getRouter() {
     defaultPreloadStaleTime: 0,
     defaultPendingComponent: Spinner,
     defaultErrorComponent: ErrorFallback,
+    defaultNotFoundComponent: NotFound,
     Wrap: ({ children }) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     ),
