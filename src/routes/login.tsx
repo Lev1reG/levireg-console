@@ -3,6 +3,7 @@ import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
+import { Eye, EyeOff, Lock, User } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import {
   Field,
@@ -58,6 +59,7 @@ function Login() {
   // Destructive messages under the button
   const [errors, setErrors] = useState<Array<string>>([])
   const [lockedFor, setLockedFor] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     if (lockedFor <= 0) return
@@ -127,16 +129,38 @@ function Login() {
 
   return (
     <main className="grid min-h-svh md:grid-cols-2">
-      <aside className="hidden flex-col justify-between bg-primary p-10 text-primary-foreground md:flex">
-        <span className="font-semibold tracking-tight">levireg / console</span>
-        <p className="text-2xl leading-snug font-medium">
-          Dashboard for levireg services.
+      <aside className="relative hidden flex-col justify-between overflow-hidden bg-zinc-900 p-10 text-zinc-50 md:flex">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(250,250,250,.16)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_85%_75%_at_100%_100%,#000,transparent)]"
+        />
+        <span className="relative flex items-center gap-3 text-sm font-semibold tracking-tight">
+          <span
+            aria-hidden
+            className="size-2 animate-pulse rounded-full bg-emerald-400 ring-4 ring-emerald-400/20"
+          />
+          levireg / console
+        </span>
+        <p className="relative max-w-xs text-[28px] leading-[1.3] font-medium tracking-tight">
+          <span className="text-zinc-400">Dashboard for</span> levireg services.
         </p>
-        <span className="text-sm opacity-70">levireg.dev</span>
+        <span className="relative text-[13px] text-zinc-400">levireg.dev</span>
       </aside>
       <section className="flex items-center justify-center p-6">
         <div className="w-full max-w-xs">
-          <h1 className="mb-6 text-2xl font-semibold">Sign in</h1>
+          <span className="mb-10 flex items-center gap-3 text-sm font-semibold tracking-tight md:hidden">
+            <span
+              aria-hidden
+              className="size-2 animate-pulse rounded-full bg-emerald-500"
+            />
+            levireg / console
+          </span>
+          <h1 className="mb-1.5 text-2xl font-semibold tracking-tight">
+            Sign in
+          </h1>
+          <p className="mb-7 text-sm text-muted-foreground">
+            Enter your credentials to access the console.
+          </p>
           <form
             noValidate
             onSubmit={(e) => {
@@ -152,23 +176,46 @@ function Login() {
                     const isInvalid =
                       field.state.meta.isTouched && !field.state.meta.isValid
                     const isPassword = name === 'password'
+                    const Icon = isPassword ? Lock : User
                     return (
                       <Field data-invalid={isInvalid}>
                         <FieldLabel htmlFor={field.name}>
                           {isPassword ? 'Password' : 'Username'}
                         </FieldLabel>
-                        <Input
-                          id={field.name}
-                          name={field.name}
-                          type={isPassword ? 'password' : 'text'}
-                          autoComplete={
-                            isPassword ? 'current-password' : 'username'
-                          }
-                          value={field.state.value}
-                          onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          aria-invalid={isInvalid}
-                        />
+                        <div className="group relative">
+                          <Icon
+                            aria-hidden
+                            className="pointer-events-none absolute top-3 left-3.5 z-10 size-4 text-zinc-500 group-focus-within:text-emerald-600 group-has-aria-invalid:text-destructive group-has-aria-invalid:group-focus-within:text-destructive"
+                          />
+                          <Input
+                            id={field.name}
+                            name={field.name}
+                            type={
+                              isPassword && !showPassword ? 'password' : 'text'
+                            }
+                            autoComplete={
+                              isPassword ? 'current-password' : 'username'
+                            }
+                            value={field.state.value}
+                            onBlur={field.handleBlur}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            aria-invalid={isInvalid}
+                            className={`h-11 rounded-full bg-zinc-100 pl-9.5 focus-visible:border-emerald-600 focus-visible:ring-emerald-600/20 md:h-10 ${isPassword ? 'pr-11' : 'pr-4'}`}
+                          />
+                          {isPassword && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              className="absolute top-0 right-0 size-11 rounded-full text-zinc-500 hover:bg-transparent hover:text-zinc-950 md:size-10"
+                              aria-label={
+                                showPassword ? 'Hide password' : 'Show password'
+                              }
+                              onClick={() => setShowPassword((v) => !v)}
+                            >
+                              {showPassword ? <EyeOff /> : <Eye />}
+                            </Button>
+                          )}
+                        </div>
                         {isInvalid && (
                           <FieldError errors={field.state.meta.errors} />
                         )}
@@ -182,7 +229,7 @@ function Login() {
                   {(isSubmitting) => (
                     <Button
                       type="submit"
-                      className="w-full"
+                      className="mt-1 h-11 w-full rounded-full md:h-10"
                       disabled={isSubmitting || lockedFor > 0}
                     >
                       {isSubmitting
