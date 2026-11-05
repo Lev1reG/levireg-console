@@ -185,7 +185,7 @@ function Login() {
                         <div className="group relative">
                           <Icon
                             aria-hidden
-                            className="pointer-events-none absolute top-3 left-3.5 z-10 size-4 text-zinc-500 group-focus-within:text-emerald-600 group-has-aria-invalid:text-destructive group-has-aria-invalid:group-focus-within:text-destructive"
+                            className="pointer-events-none absolute top-3 left-3.5 z-10 size-4 text-muted-foreground group-focus-within:text-emerald-600 group-has-aria-invalid:text-destructive group-has-aria-invalid:group-focus-within:text-destructive"
                           />
                           <Input
                             id={field.name}
@@ -200,13 +200,13 @@ function Login() {
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
                             aria-invalid={isInvalid}
-                            className={`h-11 rounded-full bg-zinc-100 pl-9.5 focus-visible:border-emerald-600 focus-visible:ring-emerald-600/20 md:h-10 ${isPassword ? 'pr-11' : 'pr-4'}`}
+                            className={`h-11 rounded-full bg-muted pl-9.5 focus-visible:border-emerald-600 focus-visible:ring-emerald-600/20 md:h-10 ${isPassword ? 'pr-11' : 'pr-4'}`}
                           />
                           {isPassword && (
                             <Button
                               type="button"
                               variant="ghost"
-                              className="absolute top-0 right-0 size-11 rounded-full text-zinc-500 hover:bg-transparent hover:text-zinc-950 md:size-10"
+                              className="absolute top-0 right-0 size-11 rounded-full text-muted-foreground hover:bg-transparent hover:text-foreground md:size-10"
                               aria-label={
                                 showPassword ? 'Hide password' : 'Show password'
                               }
