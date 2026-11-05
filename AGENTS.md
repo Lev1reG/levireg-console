@@ -44,6 +44,7 @@ Client-only SPA (Vite + React 19), despite the README's "TanStack Start" boilerp
 - **Router + Query wiring (`src/router.tsx`):** `getRouter()` creates the `QueryClient`, passes it as router context (`createRootRouteWithContext<{ queryClient }>` in `__root.tsx`), and provides it via the router's `Wrap`. Load data in route `loader`s with `context.queryClient.query({ ...options, staleTime: 'static' })` (`ensureQueryData` is deprecated), then read it in components with `useQuery`/`useSuspenseQuery`. `defaultPreloadStaleTime: 0` is deliberate: TanStack Query owns cache freshness (default `staleTime` 60s), not the router.
 - **Defaults:** `Spinner` is the default pending component and `ErrorFallback` the default error component for all routes.
 - **UI:** shadcn/ui (`base-rhea` style, built on `@base-ui/react`, not Radix), Tailwind v4 configured in `src/styles.css` (no `tailwind.config`), lucide icons. Add components with `pnpm dlx shadcn add <name>`; they land in `src/components/ui/`.
+- **shadcn first:** if shadcn/ui has a component, install it (`pnpm dlx shadcn add <name>`) and extend via `className`/composition instead of hand-rolling. Custom components only when shadcn has none. Do not rewrite generated `src/components/ui/` files beyond small style tweaks. `shadcn add` prompts before overwriting existing files; answer no (or revert) so local edits survive.
 - **Import aliases:** both `#/*` (package.json `imports`) and `@/*` (used by shadcn) map to `src/*`.
 
 ## Agent skills

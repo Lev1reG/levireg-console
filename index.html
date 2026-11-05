@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>levireg-console</title>
+    <script>
+      try {
+        var t = JSON.parse(localStorage.getItem('theme')).state.theme
+        if (t === 'dark') document.documentElement.classList.add('dark')
+      } catch (e) {
+        if (matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.classList.add('dark')
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -9,7 +9,9 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query'
-import { Button } from '#/components/ui/button'
+import { AppSidebar } from '#/components/app-sidebar'
+import { AppTopbar } from '#/components/app-topbar'
+import { SidebarInset, SidebarProvider } from '#/components/ui/sidebar'
 import { api, apiCode } from '#/lib/api'
 import { meQuery } from '#/lib/auth'
 
@@ -43,28 +45,17 @@ function AuthedLayout() {
   })
 
   return (
-    <>
-      <header className="flex items-center justify-between border-b px-4 py-2">
-        <span className="flex items-center gap-3 font-semibold">
-          <span
-            aria-hidden
-            className="size-2 animate-pulse rounded-full bg-emerald-500 ring-4 ring-emerald-500/20"
-          />
-          levireg / console
-        </span>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">{me.name}</span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={signOut.isPending}
-            onClick={() => signOut.mutate()}
-          >
-            Sign out
-          </Button>
-        </div>
-      </header>
-      <Outlet />
-    </>
+    <SidebarProvider>
+      <AppSidebar
+        name={me.name}
+        username={me.username}
+        onSignOut={() => signOut.mutate()}
+        signingOut={signOut.isPending}
+      />
+      <SidebarInset>
+        <AppTopbar />
+        <Outlet />
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

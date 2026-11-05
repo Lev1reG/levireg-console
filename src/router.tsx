@@ -63,6 +63,10 @@ export function getRouter() {
 }
 
 declare module '@tanstack/react-router' {
+  // Breadcrumb label; routes without one are skipped.
+  interface StaticDataRouteOption {
+    crumb?: string
+  }
   interface Register {
     router: ReturnType<typeof getRouter>
   }
