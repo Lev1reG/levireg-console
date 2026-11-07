@@ -45,6 +45,7 @@ Client-only SPA (Vite + React 19), despite the README's "TanStack Start" boilerp
 - **Defaults:** `Spinner` is the default pending component and `ErrorFallback` the default error component for all routes.
 - **UI:** shadcn/ui (`base-rhea` style, built on `@base-ui/react`, not Radix), Tailwind v4 configured in `src/styles.css` (no `tailwind.config`), lucide icons. Add components with `pnpm dlx shadcn add <name>`; they land in `src/components/ui/`.
 - **shadcn first:** if shadcn/ui has a component, install it (`pnpm dlx shadcn add <name>`) and extend via `className`/composition instead of hand-rolling. Custom components only when shadcn has none. Do not rewrite generated `src/components/ui/` files beyond small style tweaks. `shadcn add` prompts before overwriting existing files; answer no (or revert) so local edits survive.
+- **UI copy:** all user-facing text (labels, placeholders, buttons, errors, empty states, `aria-label`s, toasts) is written in English, whatever language the chat is in.
 - **Import aliases:** both `#/*` (package.json `imports`) and `@/*` (used by shadcn) map to `src/*`.
 
 ## Agent skills
