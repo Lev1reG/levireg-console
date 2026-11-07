@@ -196,6 +196,9 @@ function Login() {
                             autoComplete={
                               isPassword ? 'current-password' : 'username'
                             }
+                            placeholder={
+                              isPassword ? 'Enter password' : 'Enter username'
+                            }
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
