@@ -1,6 +1,6 @@
 # levireg-console
 
-Admin dashboard for the personal website. A browser app that Users sign in to and that talks to levireg-core. Shares levireg-core's vocabulary (User, Approved User, Pending User, Role, Superadmin); terms below are the ones this app adds or sharpens.
+Admin dashboard for the personal website. A browser app that Users sign in to and that talks to levireg-core. Shares levireg-core's vocabulary (User, Approved User, Pending User, Role, Superadmin, Member); terms below are the ones this app adds or sharpens.
 
 ## Language
 
