@@ -141,4 +141,9 @@ body {
   html {
     @apply font-sans;
   }
+  /* Tailwind v4 preflight resets buttons to cursor: default */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
 }
