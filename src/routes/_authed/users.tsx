@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   createFileRoute,
   redirect,
@@ -11,6 +11,9 @@ import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Skeleton } from '#/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '#/components/ui/tabs'
+import { ModerationDialog } from '#/components/users/moderation-dialog'
+import type { Target } from '#/components/users/moderation-dialog'
+import { useModeration } from '#/components/users/use-moderation'
 import { UsersCards, UsersCardsSkeleton } from '#/components/users/users-cards'
 import { UsersFooter } from '#/components/users/users-footer'
 import { UsersTable, UsersTableSkeleton } from '#/components/users/users-table'
@@ -114,6 +117,18 @@ function Users() {
       ? undefined
       : pending + approved
 
+  const { busy, run } = useModeration()
+  const [target, setTarget] = useState<Target | null>(null)
+  const onAction = (action: Target['action'], user: Target['user']) =>
+    setTarget({ action, user })
+
+  // After an approve/reject refetch empties the last page, step back.
+  const last = pastEndPage(users.length, meta)
+  useEffect(() => {
+    if (last)
+      void navigate({ search: { ...search, page: last }, replace: true })
+  }, [last, navigate, search])
+
   const refreshFailed = list.isRefetchError
   const { refetch } = list
   useEffect(() => {
@@ -167,14 +182,22 @@ function Users() {
       ) : (
         <>
           <div className="hidden md:block">
-            <UsersTable users={users} />
+            <UsersTable users={users} busy={busy} onAction={onAction} />
           </div>
           <div className="md:hidden">
-            <UsersCards users={users} />
+            <UsersCards users={users} busy={busy} onAction={onAction} />
           </div>
           <UsersFooter search={search} total={meta.total} />
         </>
       )}
+      <ModerationDialog
+        target={target}
+        onCancel={() => setTarget(null)}
+        onConfirm={(t) => {
+          setTarget(null)
+          void run(t.action, t.user.username)
+        }}
+      />
     </main>
   )
 }

@@ -10,12 +10,25 @@ import { Skeleton } from '#/components/ui/skeleton'
 import type { components } from '#/lib/api.gen'
 import { formatDate } from './format'
 import { RoleBadge, StatusBadge } from './user-badges'
+import { UserActions } from './user-actions'
+import type { UserActionProps } from './user-actions'
 
 type User = components['schemas']['User']
 
-const heads = ['User', 'Email', 'Role', 'Status', 'Registered', 'Approved']
+const heads = [
+  'User',
+  'Email',
+  'Role',
+  'Status',
+  'Registered',
+  'Approved',
+  'Actions',
+]
 
-export function UsersTable({ users }: { users: User[] }) {
+export function UsersTable({
+  users,
+  ...actions
+}: { users: User[] } & UserActionProps) {
   return (
     <Table>
       <TableHeader>
@@ -44,6 +57,9 @@ export function UsersTable({ users }: { users: User[] }) {
             </TableCell>
             <TableCell className="text-muted-foreground">
               {u.approved_at ? formatDate(u.approved_at) : '—'}
+            </TableCell>
+            <TableCell>
+              <UserActions user={u} {...actions} />
             </TableCell>
           </TableRow>
         ))}

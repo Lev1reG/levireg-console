@@ -3,10 +3,15 @@ import { Skeleton } from '#/components/ui/skeleton'
 import type { components } from '#/lib/api.gen'
 import { formatDate } from './format'
 import { RoleBadge, StatusBadge } from './user-badges'
+import { UserActions } from './user-actions'
+import type { UserActionProps } from './user-actions'
 
 type User = components['schemas']['User']
 
-export function UsersCards({ users }: { users: User[] }) {
+export function UsersCards({
+  users,
+  ...actions
+}: { users: User[] } & UserActionProps) {
   return (
     <ul className="flex flex-col gap-3">
       {users.map((u) => (
@@ -34,6 +39,7 @@ export function UsersCards({ users }: { users: User[] }) {
                   Approved {formatDate(u.approved_at)}
                 </div>
               )}
+              <UserActions user={u} {...actions} className="h-11 flex-1" />
             </CardContent>
           </Card>
         </li>
