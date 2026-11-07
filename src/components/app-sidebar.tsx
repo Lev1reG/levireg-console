@@ -26,13 +26,27 @@ export const initials = (name: string) =>
     .toUpperCase()
 
 type Props = {
+  role: 'superadmin' | 'member'
   name: string
   username: string
   onSignOut: () => void
   signingOut: boolean
 }
 
-export function AppSidebar({ name, username, onSignOut, signingOut }: Props) {
+export function AppSidebar({
+  role,
+  name,
+  username,
+  onSignOut,
+  signingOut,
+}: Props) {
+  const visibleGroups = navGroups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((i) => !i.superadminOnly || role === 'superadmin'),
+    }))
+    .filter((g) => g.items.length > 0)
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -47,7 +61,7 @@ export function AppSidebar({ name, username, onSignOut, signingOut }: Props) {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {navGroups.map((group) => (
+        {visibleGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>

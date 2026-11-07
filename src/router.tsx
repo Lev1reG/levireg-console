@@ -12,10 +12,19 @@ import { Spinner } from './components/ui/spinner'
 import { ErrorFallback } from './components/ui/error-fallback'
 import { NotFound } from './components/not-found'
 import { apiCode } from './lib/api'
+import { meQuery } from './lib/auth'
 
 export function getRouter() {
   const onError = (error: unknown, meta?: QueryMeta) => {
-    if (apiCode(error) !== 'unauthorized' || meta?.skipAuthRedirect) return
+    const code = apiCode(error)
+    if (code === 'forbidden') {
+      // me itself 403ing would loop
+      if (meta?.skipAuthRedirect) return
+      // Role may have changed; refetch so the sidebar and guards catch up
+      void queryClient.invalidateQueries({ queryKey: meQuery.queryKey })
+      return
+    }
+    if (code !== 'unauthorized' || meta?.skipAuthRedirect) return
     // Several 401s can land together; only the first one redirects
     if (router.state.location.pathname === '/login') return
     queryClient.clear()

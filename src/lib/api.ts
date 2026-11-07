@@ -80,6 +80,16 @@ export function apiEnvelope(error: unknown): Envelope | undefined {
     : undefined
 }
 
+// Thrown client-side (e.g. a route's beforeLoad) to reach the same
+// No access path as an API 403.
+export class ForbiddenError extends Error {
+  constructor() {
+    super('Forbidden')
+  }
+}
+
 export function apiCode(error: unknown): Code | undefined {
-  return apiEnvelope(error)?.code
+  return error instanceof ForbiddenError
+    ? 'forbidden'
+    : apiEnvelope(error)?.code
 }
