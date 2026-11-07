@@ -2,6 +2,7 @@ import axios from 'axios'
 import type { components, paths } from './api.gen'
 
 export type Envelope = components['schemas']['Envelope']
+export type Meta = components['schemas']['Meta']
 export type Code = components['schemas']['Code']
 
 type Method = 'get' | 'post'
@@ -47,14 +48,11 @@ const client = axios.create({
   withCredentials: true,
 })
 
-export async function api<
-  TMethod extends Method,
-  TPath extends PathsWith<TMethod>,
->(
-  method: TMethod,
-  url: TPath,
-  ...[opts]: OptsArg<Op<TPath, TMethod>>
-): Promise<Data<Op<TPath, TMethod>>> {
+async function request(
+  method: Method,
+  url: string,
+  opts: unknown,
+): Promise<Envelope> {
   const { body, path, query } = (opts ?? {}) as {
     body?: unknown
     path?: Record<string, string | number>
@@ -71,7 +69,35 @@ export async function api<
     data: body,
     params: query,
   })
-  return res.data.data as Data<Op<TPath, TMethod>>
+  return res.data
+}
+
+export async function api<
+  TMethod extends Method,
+  TPath extends PathsWith<TMethod>,
+>(
+  method: TMethod,
+  url: TPath,
+  ...[opts]: OptsArg<Op<TPath, TMethod>>
+): Promise<Data<Op<TPath, TMethod>>> {
+  const env = await request(method, url, opts)
+  return env.data as Data<Op<TPath, TMethod>>
+}
+
+// Like api(), for list endpoints: also returns the pagination meta.
+export async function apiPage<
+  TMethod extends Method,
+  TPath extends PathsWith<TMethod>,
+>(
+  method: TMethod,
+  url: TPath,
+  ...[opts]: OptsArg<Op<TPath, TMethod>>
+): Promise<{ data: Data<Op<TPath, TMethod>>; meta: Meta }> {
+  const env = await request(method, url, opts)
+  return {
+    data: env.data as Data<Op<TPath, TMethod>>,
+    meta: env.meta as Meta,
+  }
 }
 
 export function apiEnvelope(error: unknown): Envelope | undefined {

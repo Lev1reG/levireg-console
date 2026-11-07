@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
 import { LogOut } from 'lucide-react'
 import { navGroups } from '#/components/nav'
 import { Avatar, AvatarFallback } from '#/components/ui/avatar'
 import { Button } from '#/components/ui/button'
+import { usersCountQuery } from '#/lib/users'
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +14,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
@@ -40,6 +43,10 @@ export function AppSidebar({
   onSignOut,
   signingOut,
 }: Props) {
+  const { data: pending } = useQuery({
+    ...usersCountQuery('pending'),
+    enabled: role === 'superadmin',
+  })
   const visibleGroups = navGroups
     .map((g) => ({
       ...g,
@@ -80,6 +87,9 @@ export function AppSidebar({
                         </SidebarMenuButton>
                       )}
                     </Link>
+                    {to === '/users' && !!pending && (
+                      <SidebarMenuBadge>{pending}</SidebarMenuBadge>
+                    )}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
